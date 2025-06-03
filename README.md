@@ -1,70 +1,21 @@
-# Getting Started with Create React App
+# Property Management App for Primavera
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+*This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).*
 
-## Available Scripts
+## About the Project
 
-In the project directory, you can run:
+This project, started on 6/1/2025, was built as a side project to learn app development as a way of aiding the file management and property management of the Primavera group, private group that still uses old school physical file cabinets. 
 
-### `npm start`
+With a focus on simplicity, this apps to make file storing and creating as simple and straight-forward as possible. 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Current State of the Project
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Last Updated: 6/3/2025
 
-### `npm test`
+The application allows for addition, deletion, and modification of tenants. The next goal is to be able to add files associated with each tenant. From there, we can see that we add more functions to add ease, such as sorting for and searching for tenants, and creating/modifying files in app for each tenant.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Once the main functionality is complete, we will adjust the styles and buttons for accessibility and nice visuals. 
 
-### `npm run build`
+The current timeline for the app is one month and a half. With the first two weeks dedicated to core functionality and necessary testing and the last two to four weeks dedicated to styling, final testing and polishing. 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Author: Giovanna Ehrig

@@ -14,25 +14,17 @@ function PropertyCard({ property, onDelete, onSave, index }) {
       ...prev,
       [name]: name === 'rent' ? parseFloat(value) || 0 : value,
     }));
-    // setEditForm({ ...editForm, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
-    console.log('Saving with data:', editForm); // debug output
+  console.log('Saving with data:', editForm); // debug output
 
-    if (!editForm.address || !editForm.tenant || isNaN(editForm.rent)) {
+  if (!editForm.address || !editForm.tenant || isNaN(editForm.rent)) {
       alert('Please fill out all fields correctly.');
       return;
-    }
+  }
 
-    // await onSave(property.id, editForm);
-    setIsEditing(false);
-//     console.log('Saving:', {
-//         address: editForm.address,
-//         tenant: editForm.tenant,
-//         rent: editForm.rent
-//         });
-
+  setIsEditing(false);
   await onSave(property.id, {
     address: editForm.address,
     tenant: editForm.tenant,
@@ -40,16 +32,6 @@ function PropertyCard({ property, onDelete, onSave, index }) {
   });
   setIsEditing(false);
 };
-
-//   const handleCancel = () => {
-//     setEditForm({
-//       address: property.address || '',
-//       tenant: property.tenant || '',
-//       rent: property.rent || 0,
-//     });
-//     setIsEditing(false);
-//   };
-
 
   return (
     <div style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '6px' }}>

@@ -28,6 +28,12 @@ router.post('/', (req, res) => {
 // PUT update property
 router.put('/:id', (req, res) => {
   const { address, tenant, rent } = req.body;
+  console.log('PUT /:id received:', req.body);
+
+  if (!address || !tenant || isNaN(rent)) {
+    return res.status(400).json({ error: 'Invalid input data' });
+  }
+
   db.run(
     'UPDATE properties SET address = ?, tenant = ?, rent = ? WHERE id = ?',
     [address, tenant, rent, req.params.id],

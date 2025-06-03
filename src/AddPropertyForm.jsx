@@ -8,28 +8,17 @@ function AddPropertyForm({ onAdd }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleAdd = () => {
-    const { address, tenant, rent } = form;
-    if (!address || !tenant || !rent) return alert('Fill in all fields');
-    onAdd({ address, tenant, rent });
-    setForm({ address: '', tenant: '', rent: '' });
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch('http://localhost:3001/api/properties', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        ...form,
-        rent: parseFloat(form.rent)
-      })
+    if (!form.address || !form.tenant || !form.rent) return alert('Fill in all fields');
+
+    await onAdd({
+        address: form.address,
+        tenant: form.tenant,
+        rent: parseFloat(form.rent),
     });
     
-    const newProperty = await res.json();
-    handleAdd(newProperty); // Update parent list
     setForm({ address: '', tenant: '', rent: '' }); // Reset form
   };
 
@@ -74,16 +63,3 @@ function AddPropertyForm({ onAdd }) {
 }
 
 export default AddPropertyForm;
-
-//   return (
-//     <div>
-//       <h3>Add New Property</h3>
-//       <input name="address" value={form.address} onChange={handleChange} placeholder="Address" /><br />
-//       <input name="tenant" value={form.tenant} onChange={handleChange} placeholder="Tenant Name" /><br />
-//       <input name="rent" type="number" value={form.rent} onChange={handleChange} placeholder="Monthly Rent" /><br />
-//       <button onClick={handleAdd}>Add Property</button>
-//     </div>
-//   );
-// }
-
-// export default AddPropertyForm;

@@ -87,7 +87,7 @@ const handleSave = async (id, updatedProperty) => {
           key={p.id}
           property={p}
           onDelete={() => handleDelete(p.id)}
-          onSave={(updated) => handleSave(p.id, updated)}
+          onSave={handleSave}
         />
       ))}
 
