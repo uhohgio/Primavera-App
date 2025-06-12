@@ -79,7 +79,7 @@ const handleSave = async (id, updatedProperty) => {
       <AddPropertyForm onAdd={handleAdd} />
 
       <h3>Properties</h3>
-      {properties.map((p) => (
+      {Array.isArray(properties) && properties.map((p) => (
         <PropertyCard
           key={p.id}
           property={p}
