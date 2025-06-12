@@ -4,56 +4,113 @@ const express = require('express');
 const router = express.Router();
 const db = require('./db');
 
+
+// Multer setup for file uploads
+
+
+const multer = require('multer'); 
+// multer is used for handling multipart/form-data, which is primarily used for uploading files
+
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/'); // save in uploads
+  },
+  filename: function (req, file, cb) {
+    const uniqueName = Date.now() + path.extname(file.originalname);
+    cb(null, uniqueName);
+  }
+});
+
+const upload = multer({ storage });  
+
+
 // GET all properties
-router.get('/', (req, res) => {
-  db.all('SELECT * FROM properties', [], (err, rows) => {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json(rows);
-  });
+router.get('/', async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM properties');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET property by ID
+router.get('/:id', async (req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await db.query('SELECT * FROM properties WHERE id = $1', [id]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // POST new property
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { address, tenant, rent } = req.body;
-  db.run(
-    'INSERT INTO properties (address, tenant, rent) VALUES (?, ?, ?)',
-    [address, tenant, rent],
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ id: this.lastID, address, tenant, rent });
-    }
-  );
+  try {
+    const result = await db.query(
+      'INSERT INTO properties (address, tenant, rent) VALUES ($1, $2, $3) RETURNING *',
+      [address, tenant, rent]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// PUT update property
-router.put('/:id', (req, res) => {
+
+// UPDATE property
+router.put('/:id', async (req, res) => {
   const { address, tenant, rent } = req.body;
-  console.log('PUT /:id received:', req.body);
+  const id = req.params.id;
 
   if (!address || !tenant || isNaN(rent)) {
-    return res.status(400).json({ error: 'Invalid input data' });
+    return res.status(400).json({ error: 'Invalid input' });
   }
 
-  db.run(
-    'UPDATE properties SET address = ?, tenant = ?, rent = ? WHERE id = ?',
-    [address, tenant, rent, req.params.id],
-    function (err) {
-      if (err) return res.status(500).json({ error: err.message });
-    //   res.json({ success: true });
-      db.get('SELECT * FROM properties WHERE id = ?', [req.params.id], (err, row) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(row);
-      });
+  try {
+    const result = await db.query(
+      'UPDATE properties SET address = $1, tenant = $2, rent = $3 WHERE id = $4 RETURNING *',
+      [address, tenant, rent, id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Property not found' });
     }
-  );
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating property:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 // DELETE property
-router.delete('/:id', (req, res) => {
-  db.run('DELETE FROM properties WHERE id = ?', [req.params.id], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    res.json({ success: true });
-  });
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const result = await db.query(
+      'DELETE FROM properties WHERE id = $1 RETURNING *',
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Property not found' });
+    }
+
+    res.json({ success: true, deleted: result.rows[0] });
+  } catch (err) {
+    console.error('Error deleting property:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
+
 
 module.exports = router;

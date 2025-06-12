@@ -22,9 +22,6 @@ function App() {
   }, []);
 
   if (loading) return <p>Loading...</p>;
-  // useEffect(() => {
-  //   localStorage.setItem('properties', JSON.stringify(properties));
-  // }, [properties]);
 
 const handleAdd = async (newProp) => {
   try {
