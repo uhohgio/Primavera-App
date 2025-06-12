@@ -7,6 +7,13 @@ const routes = require('./routes');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const api = process.env.REACT_APP_API_URL;
+fetch(`${api}/api/properties`)
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error fetching properties:', error));
+
+
 
 app.use(cors());
 app.use(express.json());
