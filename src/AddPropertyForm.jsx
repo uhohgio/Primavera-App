@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 
-function AddPropertyForm({ onAdd }) {
+function AddPropertyForm({ onAdd, onCloseForm }) {
   const [form, setForm] = useState({ address: '', tenant: '', rent: '' });
 
   const handleChange = (e) => {
@@ -18,12 +18,13 @@ function AddPropertyForm({ onAdd }) {
         tenant: form.tenant,
         rent: parseFloat(form.rent),
     });
+    onCloseForm(); // Close the form after adding
     
     setForm({ address: '', tenant: '', rent: '' }); // Reset form
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 border rounded mb-4">
+    <form onSubmit={handleSubmit} id="add-form" className="p-4 border rounded mb-4">
       <h2 className="text-lg font-semibold mb-2">Add New Property</h2>
       <input
         type="text"
@@ -31,7 +32,6 @@ function AddPropertyForm({ onAdd }) {
         placeholder="Address"
         value={form.address}
         onChange={handleChange}
-        className="block mb-2 p-2 border rounded w-full"
         required
       />
       <input
@@ -40,7 +40,6 @@ function AddPropertyForm({ onAdd }) {
         placeholder="Tenant"
         value={form.tenant}
         onChange={handleChange}
-        className="block mb-2 p-2 border rounded w-full"
         required
       />
       <input
@@ -49,17 +48,21 @@ function AddPropertyForm({ onAdd }) {
         placeholder="Rent"
         value={form.rent}
         onChange={handleChange}
-        className="block mb-2 p-2 border rounded w-full"
         required
       />
-      <button
+      <div style={{display:'grid',gridTemplateColumns: 'repeat(2, 1fr)', gap:'20px'}}><button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
       >
         Add Property
-      </button>
+      </button> 
+      <button
+        onClick={onCloseForm}
+      >Cancel</button></div>
+        
     </form>
   );
 }
+
+
 
 export default AddPropertyForm;

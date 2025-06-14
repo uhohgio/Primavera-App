@@ -5,9 +5,116 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: antiquewhite;
+  color:rgb(70, 47, 3);
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.hidden {
+  display: none !important;
+}
+
+#add-form {
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+  justify-content: center;
+  /* margin: 20px; */
+  padding: 10px;
+  border-radius: 6px;
+  background-color: linen;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+#add-form input,
+#add-form textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#add-form input:focus,
+#add-form textarea:focus {
+  outline: none;
+  border-color: rgb(70, 47, 3);
+  box-shadow: 0 0 0 2px rgb(70, 47, 3); /* Focus ring */
+}
+
+#property-cards-title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  /* flex-direction: row; */
+  /* padding: 20px; */
+}
+#property-cards-title h2 {
+  display: inline;
+  display: flex;
+  justify-content:flex-start;
+  margin: 0;
+  color: rgb(70, 47, 3);
+}
+#property-cards-title button {
+  display: inline-flex;
+  justify-content: flex-end;
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: rgb(70, 47, 3);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button {
+  background-color:burlywood;
+  border-radius: 6px;
+  border: none;
+  padding: 10px 20px;
+  transition: all 0.1s ease-in-out;
+  color: #ffffff;
+}
+
+button:hover {
+  color: rgb(70, 47, 3);
+  /* font-weight: bold; */
+  box-shadow: 0 4px 4px rgba(172, 134, 94, 0.8);
+  transform: scale(1.03);
+  
+  cursor: pointer;
+}
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+button:active {
+  background-color: rgb(70, 47, 3)  ;
+  color: #fff;
+  transform: translateY(0.1rem);
+  cursor: pointer;
+}
+      button:focus {
+  outline: none;  
+  box-shadow: 0 0 0 2px rgb(70, 47, 3);  /* Focus ring */
+} 
+
+
+/** Decorating the Property Cards! **/
+
+/* The property card is a container for each property listing. */
+/* It contains the property image, title, description, and a button to view details. */
+
+#property-card { 
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  background-color: linen;
+}
+
+/* Button Decorating! */

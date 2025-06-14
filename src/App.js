@@ -6,7 +6,7 @@ import { supabase } from './supabaseClient';
 function App() {
   const [properties, setProperties] = useState([]);
   const[loading, setLoading] = useState(true);
-
+  const [showAddForm, setShowAddForm] = useState(false);
 
   const fetchProperties = async () => {
     const { data, error } = await supabase
@@ -90,10 +90,13 @@ const handleSave = async (id, updatedProperty) => {
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>🏠 Property Manager</h1>
-      <AddPropertyForm onAdd={handleAdd} />
+      <h1>🏠 Primavera Property Manager 🏠</h1>
+      {showAddForm && (
+          <AddPropertyForm onAdd={handleAdd} onCloseForm={() => setShowAddForm(false)} />
+      )}
+      
 
-      <h3>Properties</h3>
+      <div id="property-cards-title"><h3 >Properties</h3><button id="open-add-property-btn" onClick={() => setShowAddForm(true)}>&#43;</button></div>
       {Array.isArray(properties) && properties.length > 0 ? (
       properties.map((p) => (
         <PropertyCard

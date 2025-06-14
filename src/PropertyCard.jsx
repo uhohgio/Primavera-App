@@ -34,7 +34,7 @@ function PropertyCard({ property, onDelete, onSave, index }) {
 };
 
   return (
-    <div style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '6px' }}>
+    <div id="property-card" style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '6px' }}>
       {isEditing ? (
         <>
           <input 
