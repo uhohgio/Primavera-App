@@ -1,76 +1,91 @@
 import { useState, useEffect } from 'react';
 import AddPropertyForm from './AddPropertyForm';
 import PropertyCard from './PropertyCard';
+import { supabase } from './supabaseClient';
 
 function App() {
   const [properties, setProperties] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const[loading, setLoading] = useState(true);
 
-  
+
+  const fetchProperties = async () => {
+    const { data, error } = await supabase
+      .from('properties')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching properties:', error);
+      setProperties([]); // Ensure fallback to empty array
+    } else {
+      setProperties(data);
+    }
+    setLoading(false);
+  };
+
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/properties')
-      .then(res => res.json())
-      .then(data => {
-        setProperties(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Failed to fetch:', err);
-        setLoading(false);
-      });
+    fetchProperties();
   }, []);
 
   if (loading) return <p>Loading...</p>;
 
 const handleAdd = async (newProp) => {
   try {
-    const res = await fetch('http://localhost:3001/api/properties', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newProp)
-    });
-    const saved = await res.json();
-    setProperties((prev) => [...prev, saved]);
+    const { data, error } = await supabase
+      .from('properties')
+      .insert([newProp]);
+
+    if (error) throw error;
+    if (!data || data.length === 0) return;
+    setProperties((prev) => [...prev, ...data]);
+
+    await fetchProperties(); // 👈 refresh after add
   } catch (err) {
     console.error('Failed to add property:', err);
   }
 };
 
-
-  const handleDelete = async (id) => {
+// Delete property
+const handleDelete = async (id) => {
   try {
-    await fetch(`http://localhost:3001/api/properties/${id}`, {
-      method: 'DELETE'
-    });
+    const { error } = await supabase
+      .from('properties')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+
     setProperties((prev) => prev.filter((p) => p.id !== id));
+    await fetchProperties(); // 👈 refresh after add
   } catch (err) {
     console.error('Failed to delete:', err);
   }
 };
+
+// Update property
 const handleSave = async (id, updatedProperty) => {
   try {
-    console.log('Sending updatedProperty to API:', updatedProperty);
+    const { data, error } = await supabase
+      .from('properties')
+      .update(updatedProperty)
+      .eq('id', id);
 
-    const res = await fetch(`http://localhost:3001/api/properties/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedProperty), // must be stringified
-    });
+    if (error) throw error;
 
-    if (!res.ok) throw new Error('Failed to update');
-    const updated = await res.json();
-    // update local state
+    if (!data || data.length === 0) {
+      console.warn('No data returned on update');
+      return;
+    }
+
     setProperties((prev) =>
-      prev.map((p) => (p.id === id ? updated : p))
+      prev.map((p) => (p.id === id ? data[0] : p))
     );
+
+    await fetchProperties(); // 👈 refresh after add
   } catch (err) {
     console.error('Error saving property:', err);
   }
 };
-
 
 
   return (
@@ -79,15 +94,18 @@ const handleSave = async (id, updatedProperty) => {
       <AddPropertyForm onAdd={handleAdd} />
 
       <h3>Properties</h3>
-      {Array.isArray(properties) && properties.map((p) => (
+      {Array.isArray(properties) && properties.length > 0 ? (
+      properties.map((p) => (
         <PropertyCard
           key={p.id}
           property={p}
           onDelete={() => handleDelete(p.id)}
           onSave={handleSave}
         />
-      ))}
-
+      ))
+    ) : (
+      <p>No properties added yet!</p> 
+    )}
     </div>
   );
 }
