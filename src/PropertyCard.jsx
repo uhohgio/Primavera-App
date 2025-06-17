@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function PropertyCard({ property, onDelete, onSave, index }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -25,7 +26,7 @@ function PropertyCard({ property, onDelete, onSave, index }) {
   }
 
   setIsEditing(false);
-  await onSave(property.id, {
+  await onSave(property.property_id, {
     address: editForm.address,
     tenant: editForm.tenant,
     rent: parseFloat(editForm.rent)
@@ -34,7 +35,7 @@ function PropertyCard({ property, onDelete, onSave, index }) {
 };
 
   return (
-    <div id="property-card" style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '6px' }}>
+    <div id="property-card" style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '6px' }} >
       {isEditing ? (
         <>
           <input 
@@ -65,7 +66,9 @@ function PropertyCard({ property, onDelete, onSave, index }) {
           Tenant: {property.tenant}<br />
           Rent: ${property.rent}/month<br />
           <button onClick={() => setIsEditing(true)}>Edit</button>
-          <button onClick={() => onDelete(property.id)} style={{ marginLeft: '10px' }}>Delete</button>
+          <button onClick={() => onDelete(property.property_id)} style={{ marginLeft: '10px' }}>Delete</button>
+          <Link to={`/property/${property.property_id}`} style={{ textDecoration: 'none', color: 'inherit' }}><button style={{ marginLeft: '10px' }}>View Details</button></Link>
+          {/* <button onClick={() => navigate(`/property/${property.id}`)} style={{ marginLeft: '10px' }}>View Details</button> */}
         </>
       )}
     </div>

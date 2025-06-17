@@ -27,7 +27,17 @@ function App() {
     fetchProperties();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return (
+    <div style={{
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+    }}>
+      <p>Loading...</p>
+    </div>
+  );
+
 
 const handleAdd = async (newProp) => {
   try {
@@ -51,11 +61,11 @@ const handleDelete = async (id) => {
     const { error } = await supabase
       .from('properties')
       .delete()
-      .eq('id', id);
+      .eq('property_id', id);
 
     if (error) throw error;
 
-    setProperties((prev) => prev.filter((p) => p.id !== id));
+    setProperties((prev) => prev.filter((p) => p.property_id !== id));
     await fetchProperties(); // 👈 refresh after add
   } catch (err) {
     console.error('Failed to delete:', err);
@@ -68,7 +78,7 @@ const handleSave = async (id, updatedProperty) => {
     const { data, error } = await supabase
       .from('properties')
       .update(updatedProperty)
-      .eq('id', id);
+      .eq('property_id', id);
 
     if (error) throw error;
 
@@ -78,7 +88,7 @@ const handleSave = async (id, updatedProperty) => {
     }
 
     setProperties((prev) =>
-      prev.map((p) => (p.id === id ? data[0] : p))
+      prev.map((p) => (p.property_id === id ? data[0] : p))
     );
 
     await fetchProperties(); // 👈 refresh after add
@@ -89,27 +99,28 @@ const handleSave = async (id, updatedProperty) => {
 
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <h1>🏠 Primavera Property Manager 🏠</h1>
-      {showAddForm && (
-          <AddPropertyForm onAdd={handleAdd} onCloseForm={() => setShowAddForm(false)} />
-      )}
-      
+          <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+            <h1>🏠 Primavera Property Manager 🏠</h1>
+            {showAddForm && (
+                <AddPropertyForm onAdd={handleAdd} onCloseForm={() => setShowAddForm(false)} />
+            )}
+            
 
-      <div id="property-cards-title"><h3 >Properties</h3><button id="open-add-property-btn" onClick={() => setShowAddForm(true)}>&#43;</button></div>
-      {Array.isArray(properties) && properties.length > 0 ? (
-      properties.map((p) => (
-        <PropertyCard
-          key={p.id}
-          property={p}
-          onDelete={() => handleDelete(p.id)}
-          onSave={handleSave}
-        />
-      ))
-    ) : (
-      <p>No properties added yet!</p> 
-    )}
-    </div>
+            <div id="property-cards-title"><h3 >Properties</h3><button id="open-add-property-btn" onClick={() => setShowAddForm(true)}>&#43;</button></div>
+            {Array.isArray(properties) && properties.length > 0 ? (
+            properties.map((p) => (
+              <PropertyCard
+                key={p.property_id}
+                property={p}
+                onDelete={() => handleDelete(p.property_id)}
+                onSave={handleSave}
+              />
+            ))
+          ) : (
+            <p>No properties added yet!</p> 
+          )}
+          </div>
+    
   );
 }
 
