@@ -31,7 +31,7 @@ code {
 #add-form {
   display: flex;
   flex-direction: column;
-  align-items:center;
+  /* align-items:center; */
   justify-content: center;
   /* margin: 20px; */
   padding: 10px;
@@ -41,7 +41,7 @@ code {
 }
 #add-form input,
 #add-form textarea {
-  width: 100%;
+  /* width: 100%; */
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ccc;
@@ -53,6 +53,14 @@ code {
   outline: none;
   border-color: rgb(70, 47, 3);
   box-shadow: 0 0 0 2px rgb(70, 47, 3); /* Focus ring */
+}
+
+#add-property-form-description {
+  display: grid;
+  margin: 10px;
+  padding: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
 }
 
 #property-cards-title {
@@ -81,6 +89,7 @@ code {
   cursor: pointer;
 }
 
+/* Button Decorating! */
 button {
   background-color:burlywood;
   border-radius: 6px;
@@ -113,6 +122,23 @@ button:active {
   box-shadow: 0 0 0 2px rgb(70, 47, 3);  /* Focus ring */
 } 
 
+/* Input and Select Styling */
+input {
+  padding: .2rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  color:rgb(70, 47, 3);
+}
+input:active, input:focus {
+  outline: none;
+  box-shadow: 0 0 0 1px rgb(92, 49, 9); /* Focus ring */
+}
+select {
+  padding: .2rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  color: rgb(70, 47, 3);
+}
 
 /** Decorating the Property Cards! **/
 
@@ -127,4 +153,75 @@ button:active {
   background-color: linen;
 }
 
-/* Button Decorating! */
+/* Property Details Page */
+
+#back-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: burlywood;
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.1s ease-in-out;
+  text-decoration: none;
+}
+
+#back-btn:hover {
+  color: rgb(70, 47, 3);
+  box-shadow: 0 4px 4px rgba(172, 134, 94, 0.8);
+  transform: scale(1.03);
+}
+
+#property-details-container {
+  margin: 80px, 20px, 40px, 20px;
+  padding: auto;
+  
+}
+#property-details-title {
+  margin-top: 50px;
+  background-color: linen;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#property-details-uploaded-files-title {
+  margin: 20px 0px;
+  background-color: linen;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 8fr 1fr;
+}
+
+#property-details-file-form{
+  margin: 10px;
+  /* padding: auto; */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+}
+#property-details-upload-file-section{
+  padding: 20px;
+  padding-top: 10px;
+  background-color: linen;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#property-details-file-item {
+  margin-right: 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}

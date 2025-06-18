@@ -123,6 +123,6 @@ const handleSave = async (id, updatedProperty) => {
     
   );
 }
-
+ 
 export default App;
 

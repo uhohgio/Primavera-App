@@ -33,6 +33,11 @@ function PropertyCard({ property, onDelete, onSave, index }) {
   });
   setIsEditing(false);
 };
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this property?')) {
+      onDelete(property.property_id);
+    }
+  }
 
   return (
     <div id="property-card" style={{ border: '1px solid #ccc', margin: '10px 0', padding: '10px', borderRadius: '6px' }} >
@@ -66,8 +71,8 @@ function PropertyCard({ property, onDelete, onSave, index }) {
           Tenant: {property.tenant}<br />
           Rent: ${property.rent}/month<br />
           <button onClick={() => setIsEditing(true)}>Edit</button>
-          <button onClick={() => onDelete(property.property_id)} style={{ marginLeft: '10px' }}>Delete</button>
-          <Link to={`/property/${property.property_id}`} style={{ textDecoration: 'none', color: 'inherit' }}><button style={{ marginLeft: '10px' }}>View Details</button></Link>
+          <button onClick={handleDelete} style={{ marginLeft: '10px' }}>Delete</button>
+          <Link to={`/property/${property.property_id}`} style={{ textDecoration: 'none', color: 'inherit' }}><button style={{ marginLeft: '10px' }}>Manage Files</button></Link>
           {/* <button onClick={() => navigate(`/property/${property.id}`)} style={{ marginLeft: '10px' }}>View Details</button> */}
         </>
       )}

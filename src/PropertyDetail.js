@@ -12,6 +12,7 @@ export default function PropertyDetail() {
   const [documentType, setDocumentType] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('');
+  const [showUploadFileForm, setShowUploadFileForm] = useState('');
   
   const fetchFiles = useCallback(async () => {
     const { data, error } = await supabase
@@ -92,6 +93,7 @@ export default function PropertyDetail() {
     setUploading(false);
     setDescription('');
     setDocumentType('');
+    setShowUploadFileForm(false);
 
   };
 
@@ -137,39 +139,45 @@ export default function PropertyDetail() {
                 return matchesSearch && matchesType; });
   return (
     
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-      <Link to="/">&larr; Back to Properties</Link>
-      <h2>Property Detail</h2>
+    <div style={{ padding: '20px', fontFamily: 'sans-serif' }} id="property-details-container">
+      <Link to="/" id="back-btn">&larr; Back to Properties</Link>
+      <h2 id="property-details-title">Property Details</h2>
       {property ? (
         <>
           <p><strong>Address:</strong> {property.address}</p>
           <p><strong>Tenant:</strong> {property.tenant}</p>
           <p><strong>Rent:</strong> ${property.rent}</p>
+          {/* <p><strong>Last Updated:</strong> {new Date(property.updated_at).toLocaleDateString()}</p>
+          <p><strong>Created At:</strong> {new Date(property.created_at).toLocaleDateString()}</p> */}
+          {/* <Link to={`/property/${id}/edit`} id="edit-property-btn">✏️ Edit Property</Link> */}
+          <div id="property-details-uploaded-files-title"><h3>📂 Uploaded Files</h3><button onClick={()=>{setShowUploadFileForm(true)}}>Add File</button></div> 
+          {showUploadFileForm && <section id="property-details-upload-file-section">
+            <div id="property-details-upload-file-title"><h3>📂 Enter file information: </h3> </div>
+            <div id= "property-details-file-form"> 
+            <input
+              type="text"
+              placeholder="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              />
 
-          <hr />
+            <select value={documentType} onChange={(e) => setDocumentType(e.target.value)}>
+              <option value="">Select Document Type</option>
+              <option value="lease">Lease</option>
+              <option value="id">ID</option>
+              <option value="receipt">Receipt</option>
+              <option value="other">Other</option>
+            </select>
 
-          <h3>📁 Uploaded Files</h3>
-          <input
-            type="text"
-            placeholder="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            />
-
-        <select value={documentType} onChange={(e) => setDocumentType(e.target.value)}>
-        <option value="">Select Document Type</option>
-        <option value="lease">Lease</option>
-        <option value="id">ID</option>
-        <option value="receipt">Receipt</option>
-        <option value="other">Other</option>
-        </select>
-
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-          <button onClick={handleUpload} disabled={uploading}>
-            {uploading ? 'Uploading...' : 'Upload File'}
-          </button>
+            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+            <button onClick={handleUpload} disabled={uploading}>
+              {uploading ? 'Uploading...' : 'Upload File'}
+            </button>
+            <button onClick={() => setShowUploadFileForm(false)}>Cancel</button>
+            </div>
+          </section> }
           
-          <div style={{ marginTop: '20px' }}>
+          <div style={{ marginTop: '20px' }} id="property-details-file-search-filter">
             <input
                 type="text"
                 placeholder="Search files..."
@@ -187,17 +195,18 @@ export default function PropertyDetail() {
             </select>
           </div>
 
-            
+             
             <ul>
             {/* {files.length === 0 && <p>No files uploaded yet.</p>} */}
             {filteredFiles.length === 0 ? (
                 <p>No matching files.</p>
             ) : (
                 filteredFiles.map(f => (
-                <li key={f.id}>
+                <li key={f.id} id ="property-details-file-item">
                     <a href={f.url} target="_blank" rel="noreferrer">{f.name}</a>
-                    {f.description && <p><strong>Description:</strong> {f.description}</p>}
                     {f.document_type && <p><strong>Type:</strong> {f.document_type}</p>}
+                    {f.description && <p><strong>Description:</strong> {f.description}</p>}
+                    
                     <button onClick={() => handleDelete(f)}>🗑️ Delete</button>
                 </li>
                 ))

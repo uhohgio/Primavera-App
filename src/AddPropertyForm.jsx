@@ -24,8 +24,10 @@ function AddPropertyForm({ onAdd, onCloseForm }) {
   };
 
   return (
+
     <form onSubmit={handleSubmit} id="add-form" className="p-4 border rounded mb-4">
-      <h2 className="text-lg font-semibold mb-2">Add New Property</h2>
+      <h2 className="text-lg font-semibold mb-2" style={{marginLeft: '20px', marginBottom: '5px'}}>Add New Property</h2>
+      <div id="add-property-form-description" className="mb-4">
       <input
         type="text"
         name="address"
@@ -48,6 +50,8 @@ function AddPropertyForm({ onAdd, onCloseForm }) {
         placeholder="Rent"
         value={form.rent}
         onChange={handleChange}
+        min='0'
+        step="0.01"
         required
       />
       <div style={{display:'grid',gridTemplateColumns: 'repeat(2, 1fr)', gap:'20px'}}><button
@@ -58,7 +62,7 @@ function AddPropertyForm({ onAdd, onCloseForm }) {
       <button
         onClick={onCloseForm}
       >Cancel</button></div>
-        
+      </div>
     </form>
   );
 }
