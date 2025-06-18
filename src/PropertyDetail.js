@@ -1,5 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from './supabaseClient';
 
 export default function PropertyDetail() {
@@ -10,8 +10,22 @@ export default function PropertyDetail() {
   const [uploading, setUploading] = useState(false);
   const [description, setDescription] = useState('');
   const [documentType, setDocumentType] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('');
   
-  
+  const fetchFiles = useCallback(async () => {
+    const { data, error } = await supabase
+        .from('file_attachments')
+        .select('*')
+        .eq('property_id', id)
+        .order('uploaded_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching files:', error);
+    } else {
+        setFiles(data);
+    }
+  },[id]);
   useEffect(() => {
     const fetchData = async () => {
       const { data: prop, error: propError } = await supabase
@@ -26,21 +40,7 @@ export default function PropertyDetail() {
       fetchFiles();
     };
     fetchData();
-  }, [id]);
-
-  const fetchFiles = async () => {
-  const { data, error } = await supabase
-    .from('file_attachments')
-    .select('*')
-    .eq('property_id', id)
-    .order('uploaded_at', { ascending: false });
-
-  if (error) {
-    console.error('Error fetching files:', error);
-  } else {
-    setFiles(data);
-  }
-};
+  }, [id, fetchFiles]);
 
 
   const handleUpload = async () => {
@@ -130,8 +130,13 @@ export default function PropertyDetail() {
     }
     };
 
-
+    const filteredFiles = files.filter((f) => {
+                const matchesSearch = f.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                                      (f.description && f.description.toLowerCase().includes(searchQuery.toLowerCase()));
+                const matchesType = filterType ? f.document_type === filterType : true;
+                return matchesSearch && matchesType; });
   return (
+    
     <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
       <Link to="/">&larr; Back to Properties</Link>
       <h2>Property Detail</h2>
@@ -164,19 +169,41 @@ export default function PropertyDetail() {
             {uploading ? 'Uploading...' : 'Upload File'}
           </button>
           
+          <div style={{ marginTop: '20px' }}>
+            <input
+                type="text"
+                placeholder="Search files..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                style={{ marginRight: '10px' }}
+            />
 
+            <select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                <option value="">All Types</option>
+                <option value="lease">Lease</option>
+                <option value="id">ID</option>
+                <option value="receipt">Receipt</option>
+                <option value="other">Other</option>
+            </select>
+          </div>
 
-          <ul>
-            {files.length === 0 && <p>No files uploaded yet.</p>}
-            {files.map(f => (
-              <li key={f.id}>
-                <a href={f.url} target="_blank" rel="noreferrer">{f.name}</a>
-                {f.description && <p><strong>Description:</strong> {f.description}</p>}
-                {f.document_type && <p><strong>Type:</strong> {f.document_type}</p>}
-                <button onClick={() => handleDelete(f)}>🗑️ Delete</button>
-              </li>
-            ))}
-          </ul>
+            
+            <ul>
+            {/* {files.length === 0 && <p>No files uploaded yet.</p>} */}
+            {filteredFiles.length === 0 ? (
+                <p>No matching files.</p>
+            ) : (
+                filteredFiles.map(f => (
+                <li key={f.id}>
+                    <a href={f.url} target="_blank" rel="noreferrer">{f.name}</a>
+                    {f.description && <p><strong>Description:</strong> {f.description}</p>}
+                    {f.document_type && <p><strong>Type:</strong> {f.document_type}</p>}
+                    <button onClick={() => handleDelete(f)}>🗑️ Delete</button>
+                </li>
+                ))
+            )}
+            </ul>
+          
         </>
       ) : (
         <p>Loading property...</p>
