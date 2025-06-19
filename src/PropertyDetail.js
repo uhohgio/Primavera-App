@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
 import { supabase } from './supabaseClient';
 
-export default function PropertyDetail() {
+export default function PropertyDetail({ user}) {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [files, setFiles] = useState([]);
@@ -78,6 +78,8 @@ export default function PropertyDetail() {
             url: fileURL,
             description,
             document_type: documentType,
+            // user_id: supabase.auth.user()?.id || null, // Get current user ID
+            user_id: user.id,
         });
 
         if (insertError) throw insertError;

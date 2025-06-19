@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 
-function AddPropertyForm({ onAdd, onCloseForm }) {
+function AddPropertyForm({ onAdd, onCloseForm, user }) {
   const [form, setForm] = useState({ address: '', tenant: '', rent: '' });
 
   const handleChange = (e) => {
@@ -17,6 +17,7 @@ function AddPropertyForm({ onAdd, onCloseForm }) {
         address: form.address,
         tenant: form.tenant,
         rent: parseFloat(form.rent),
+        user_id: user.id,
     });
     onCloseForm(); // Close the form after adding
     

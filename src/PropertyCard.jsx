@@ -72,7 +72,7 @@ function PropertyCard({ property, onDelete, onSave, index }) {
           Rent: ${property.rent}/month<br />
           <button onClick={() => setIsEditing(true)}>Edit</button>
           <button onClick={handleDelete} style={{ marginLeft: '10px' }}>Delete</button>
-          <Link to={`/property/${property.property_id}`} style={{ textDecoration: 'none', color: 'inherit' }}><button style={{ marginLeft: '10px' }}>Manage Files</button></Link>
+          <Link to={`/property/${property.property_id}`} style={{ textDecoration: 'none', color: 'inherit' }}><button style={{ marginLeft: '10px' }} >Manage Files</button></Link>
           {/* <button onClick={() => navigate(`/property/${property.id}`)} style={{ marginLeft: '10px' }}>View Details</button> */}
         </>
       )}

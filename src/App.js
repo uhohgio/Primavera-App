@@ -3,10 +3,14 @@ import AddPropertyForm from './AddPropertyForm';
 import PropertyCard from './PropertyCard';
 import { supabase } from './supabaseClient';
 
-function App() {
+function App({user}) {
   const [properties, setProperties] = useState([]);
   const[loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  console.log(user); // Supabase user object
+
+
+  // Fetch properties from Supabase
 
   const fetchProperties = async () => {
     const { data, error } = await supabase
@@ -79,7 +83,7 @@ const handleSave = async (id, updatedProperty) => {
       .from('properties')
       .update(updatedProperty)
       .eq('property_id', id);
-
+    alert('Property updated successfully!');
     if (error) throw error;
 
     if (!data || data.length === 0) {
@@ -90,7 +94,7 @@ const handleSave = async (id, updatedProperty) => {
     setProperties((prev) =>
       prev.map((p) => (p.property_id === id ? data[0] : p))
     );
-
+    
     await fetchProperties(); // 👈 refresh after add
   } catch (err) {
     console.error('Error saving property:', err);
@@ -102,23 +106,30 @@ const handleSave = async (id, updatedProperty) => {
           <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
             <h1>🏠 Primavera Property Manager 🏠</h1>
             {showAddForm && (
-                <AddPropertyForm onAdd={handleAdd} onCloseForm={() => setShowAddForm(false)} />
+                <AddPropertyForm onAdd={handleAdd} onCloseForm={() => setShowAddForm(false)} user={user} />
             )}
             
 
             <div id="property-cards-title"><h3 >Properties</h3><button id="open-add-property-btn" onClick={() => setShowAddForm(true)}>&#43;</button></div>
-            {Array.isArray(properties) && properties.length > 0 ? (
-            properties.map((p) => (
-              <PropertyCard
-                key={p.property_id}
-                property={p}
-                onDelete={() => handleDelete(p.property_id)}
-                onSave={handleSave}
-              />
-            ))
-          ) : (
-            <p>No properties added yet!</p> 
-          )}
+            {Array.isArray(properties) && properties.some((p) => p.user_id === user.id) ? (
+              properties.map((p) => {
+                if (p.user_id !== user.id) return null;
+                return (
+                  // Ensure only user's properties are shown
+                  <PropertyCard
+                    key={p.property_id}
+                    property={p}
+                    onDelete={() => handleDelete(p.property_id)}
+                    onSave={handleSave}
+                  />
+                );
+              })
+            ) : (
+              <div style={{ textAlign: 'center', marginTop: '20px', padding: '20px'}}>
+              <h3 style={{marginBottom: '5px'}}>Click the plus sign to start adding new properties!</h3>
+              <p style={{marginTop: '5px'}}><span style={{ fontSize: '0.9em'}}>(Refresh if you can't see ones you have already added.)</span></p>
+              </div>
+            )}
           </div>
     
   );
