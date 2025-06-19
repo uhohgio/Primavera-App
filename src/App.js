@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AddPropertyForm from './AddPropertyForm';
 import PropertyCard from './PropertyCard';
 import { supabase } from './supabaseClient';
@@ -7,15 +7,16 @@ function App({user}) {
   const [properties, setProperties] = useState([]);
   const[loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
-  console.log(user); // Supabase user object
 
 
   // Fetch properties from Supabase
 
-  const fetchProperties = async () => {
+  const fetchProperties = useCallback((async () => {
+    setLoading(true); // Set loading to true before fetching
     const { data, error } = await supabase
       .from('properties')
-      .select('*');
+      .select('*')
+      .eq('user_id', user.id); // Fetch only properties for the logged-in user
 
     if (error) {
       console.error('Error fetching properties:', error);
@@ -23,13 +24,14 @@ function App({user}) {
     } else {
       setProperties(data);
     }
-    setLoading(false);
-  };
-
+    setLoading(false); // Set loading to false after fetching
+  }), [user.id]);
 
   useEffect(() => {
-    fetchProperties();
-  }, []);
+    if (user && user.id) {
+      fetchProperties();
+    }
+  }, [fetchProperties, user]);
 
   if (loading) return (
     <div style={{
@@ -47,11 +49,15 @@ const handleAdd = async (newProp) => {
   try {
     const { data, error } = await supabase
       .from('properties')
-      .insert([newProp]);
+      .insert([newProp])
+      .select(); // get the inserted data back
 
     if (error) throw error;
+
     if (!data || data.length === 0) return;
     setProperties((prev) => [...prev, ...data]);
+
+    setShowAddForm(false); // closes form after adding
 
     await fetchProperties(); // 👈 refresh after add
   } catch (err) {
@@ -82,8 +88,11 @@ const handleSave = async (id, updatedProperty) => {
     const { data, error } = await supabase
       .from('properties')
       .update(updatedProperty)
-      .eq('property_id', id);
-    alert('Property updated successfully!');
+      .eq('property_id', id)
+      .select(); // get the updated data back;
+
+    
+
     if (error) throw error;
 
     if (!data || data.length === 0) {
@@ -95,6 +104,7 @@ const handleSave = async (id, updatedProperty) => {
       prev.map((p) => (p.property_id === id ? data[0] : p))
     );
     
+    // alert('Property updated successfully!'); // if you wanna see a more tangible response
     await fetchProperties(); // 👈 refresh after add
   } catch (err) {
     console.error('Error saving property:', err);
@@ -111,23 +121,25 @@ const handleSave = async (id, updatedProperty) => {
             
 
             <div id="property-cards-title"><h3 >Properties</h3><button id="open-add-property-btn" onClick={() => setShowAddForm(true)}>&#43;</button></div>
-            {Array.isArray(properties) && properties.some((p) => p.user_id === user.id) ? (
-              properties.map((p) => {
-                if (p.user_id !== user.id) return null;
-                return (
-                  // Ensure only user's properties are shown
+            {Array.isArray(properties) && properties.length > 0 ? (
+              properties.map((p) => (
                   <PropertyCard
                     key={p.property_id}
                     property={p}
                     onDelete={() => handleDelete(p.property_id)}
                     onSave={handleSave}
                   />
-                );
-              })
+                ))
             ) : (
               <div style={{ textAlign: 'center', marginTop: '20px', padding: '20px'}}>
-              <h3 style={{marginBottom: '5px'}}>Click the plus sign to start adding new properties!</h3>
-              <p style={{marginTop: '5px'}}><span style={{ fontSize: '0.9em'}}>(Refresh if you can't see ones you have already added.)</span></p>
+              <h3 style={{marginBottom: '5px'}}>
+                Click the plus sign to start adding new properties!
+              </h3>
+              <p style={{marginTop: '5px'}}>
+                <span style={{ fontSize: '0.9em'}}>
+                  (Refresh if you can't see ones you have already added.)
+                </span>
+              </p>
               </div>
             )}
           </div>
