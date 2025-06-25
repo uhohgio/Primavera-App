@@ -7,7 +7,21 @@ export default function LoginPage() {
     <div style={{ padding: '40px', maxWidth: '400px', margin: '0 auto' }}>
       <Auth
         supabaseClient={supabase}
-        appearance={{ theme: ThemeSupa }}
+        appearance={{ 
+          theme: ThemeSupa, 
+          variables: {
+            default: {
+              colors: {
+                brand: 'burlywood',
+                brandAccent: 'burlywood',
+              },
+            },
+            button: {
+              background: 'burlywood',
+              text: 'burlywood',
+            },
+          }
+        }}
         theme="dark"
         providers={[]}
       />

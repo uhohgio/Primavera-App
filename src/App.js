@@ -111,10 +111,18 @@ const handleSave = async (id, updatedProperty) => {
   }
 };
 
+const logout = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    console.error('Error signing out:', error);
+  } else {
+    console.log('Signed out successfully');
+  }
+}
 
   return (
           <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
-            <h1>🏠 Primavera Property Manager 🏠</h1>
+            <div style={{ display: 'grid', gridTemplateColumns:'1fr auto', alignContent: 'center' }}><h1>🏠 Primavera Property Manager 🏠</h1> <button style={{ margin: '20px', marginTop: '25px'}} onClick={logout}>Logout</button></div>
             {showAddForm && (
                 <AddPropertyForm onAdd={handleAdd} onCloseForm={() => setShowAddForm(false)} user={user} />
             )}
