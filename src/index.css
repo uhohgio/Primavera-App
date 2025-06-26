@@ -225,3 +225,11 @@ select {
   border-radius: 6px;
   margin-bottom: 10px;
 }
+
+#property-details-add-file-section {
+  padding: 20px;
+  padding-top: 10px;
+  background-color: linen;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
